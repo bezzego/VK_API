@@ -18,15 +18,12 @@ def shorten_link(token, url):
         "https://api.vk.com/method/utils.getShortLink", params=params
     )
     response.raise_for_status()
-    data = response.json()
+    shorten_response = response.json()
 
-    if "error" in data:
-        error_msg = data["error"].get("error_msg", "Неизвестная ошибка")
+    if "error" in shorten_response:
+        error_msg = shorten_response["error"].get("error_msg", "Неизвестная ошибка")
         raise ValueError(f"Ошибка от VK API: {error_msg}")
-    elif "response" in data:
-        return data["response"]["short_url"]
-    else:
-        raise Exception(f"Непредвиденный ответ от VK API: {data}")
+    return shorten_response["response"]["short_url"]
 
 
 def count_clicks(token, short_url):
@@ -40,16 +37,13 @@ def count_clicks(token, short_url):
         "https://api.vk.com/method/utils.getLinkStats", params=params
     )
     response.raise_for_status()
-    data = response.json()
+    stats_response = response.json()
 
-    if "error" in data:
-        error_msg = data["error"].get("error_msg", "Неизвестная ошибка")
+    if "error" in stats_response:
+        error_msg = stats_response["error"].get("error_msg", "Неизвестная ошибка")
         raise ValueError(f"Ошибка от VK API: {error_msg}")
-    elif "response" in data:
-        total_clicks = data["response"]["stats"]
-        return sum(day["views"] for day in total_clicks)
-    else:
-        raise Exception(f"Непредвиденный ответ от VK API: {data}")
+    total_clicks = stats_response["response"]["stats"]
+    return sum(day["views"] for day in total_clicks)
 
 
 def main():
