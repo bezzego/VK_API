@@ -17,6 +17,7 @@ def shorten_link(token, url):
     response = requests.get(
         "https://api.vk.com/method/utils.getShortLink", params=params
     )
+    response.raise_for_status()
     data = response.json()
 
     if "error" in data:
@@ -38,6 +39,7 @@ def count_clicks(token, short_url):
     response = requests.get(
         "https://api.vk.com/method/utils.getLinkStats", params=params
     )
+    response.raise_for_status()
     data = response.json()
 
     if "error" in data:
