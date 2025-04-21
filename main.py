@@ -60,11 +60,21 @@ def main():
 
     try:
         if is_shorten_link(url):
-            clicks = count_clicks(token, url)
-            print("Количество переходов по ссылке:", clicks)
+            try:
+                clicks = count_clicks(token, url)
+                print("Количество переходов по ссылке:", clicks)
+            except ValueError as ve:
+                print("Ошибка при получении статистики по ссылке:", ve)
+            except requests.RequestException as re:
+                print("Ошибка сетевого запроса при получении статистики:", re)
         else:
-            short = shorten_link(token, url)
-            print("Сокращенная ссылка:", short)
+            try:
+                short = shorten_link(token, url)
+                print("Сокращенная ссылка:", short)
+            except ValueError as ve:
+                print("Ошибка при сокращении ссылки:", ve)
+            except requests.RequestException as re:
+                print("Ошибка сетевого запроса при сокращении ссылки:", re)
     except Exception as e:
         print("Не удалось сократить ссылку или получить статистику:", e)
 
