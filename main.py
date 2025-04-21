@@ -20,10 +20,11 @@ def shorten_link(token, url):
     response.raise_for_status()
     shorten_response = response.json()
 
-    if "error" in shorten_response:
-        error_msg = shorten_response["error"].get("error_msg", "Неизвестная ошибка")
-        raise ValueError(f"Ошибка от VK API: {error_msg}")
-    return shorten_response["response"]["short_url"]
+    if "error" not in shorten_response:
+        return shorten_response["response"]["short_url"]
+
+    error_msg = shorten_response["error"].get("error_msg", "Неизвестная ошибка")
+    raise ValueError(f"Ошибка от VK API: {error_msg}")
 
 
 def count_clicks(token, short_url):
@@ -39,11 +40,12 @@ def count_clicks(token, short_url):
     response.raise_for_status()
     stats_response = response.json()
 
-    if "error" in stats_response:
-        error_msg = stats_response["error"].get("error_msg", "Неизвестная ошибка")
-        raise ValueError(f"Ошибка от VK API: {error_msg}")
-    total_clicks = stats_response["response"]["stats"]
-    return sum(day["views"] for day in total_clicks)
+    if "error" not in stats_response:
+        total_clicks = stats_response["response"]["stats"]
+        return sum(day["views"] for day in total_clicks)
+
+    error_msg = stats_response["error"].get("error_msg", "Неизвестная ошибка")
+    raise ValueError(f"Ошибка от VK API: {error_msg}")
 
 
 def main():
