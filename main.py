@@ -5,17 +5,13 @@ from dotenv import load_dotenv
 
 
 def is_shorten_link(url):
-    """
-    Проверяет, является ли ссылка короткой ссылкой vk.cc
-    """
+
     parsed_url = urlparse(url)
     return parsed_url.netloc == "vk.cc"
 
 
 def shorten_link(token, url):
-    """
-    Отправляет запрос к VK API и возвращает сокращённую ссылку.
-    """
+
     params = {"access_token": token, "v": "5.131", "url": url}
 
     response = requests.get(
@@ -33,10 +29,7 @@ def shorten_link(token, url):
 
 
 def count_clicks(token, short_url):
-    """
-    Получает количество переходов по короткой ссылке VK.
-    """
-    # Извлекаем ключ ссылки (например, "cvPDMl" из "https://vk.cc/cvPDMl")
+
     path = urlparse(short_url).path
     key = path.strip("/")
 
@@ -58,7 +51,7 @@ def count_clicks(token, short_url):
 
 
 def main():
-    load_dotenv()  # Загружаем переменные окружения из .env
+    load_dotenv()
     token = os.getenv("VK_TOKEN")
     if not token:
         raise EnvironmentError("Переменная окружения VK_TOKEN не установлена")
