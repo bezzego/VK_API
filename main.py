@@ -10,8 +10,8 @@ def is_shorten_link(url):
         "https://api.vk.com/method/utils.getLinkStats", params=params
     )
     response.raise_for_status()
-    result = response.json()
-    return "response" in result
+    link_stats_response = response.json()
+    return "response" in link_stats_response
 
 
 def shorten_link(token, url):
@@ -61,24 +61,27 @@ def main():
     url = input("Введите ссылку для сокращения: ")
 
     try:
-        if is_shorten_link(url):
-            try:
-                clicks = count_clicks(token, url)
-                print("Количество переходов по ссылке:", clicks)
-            except ValueError as ve:
-                print("Ошибка при получении статистики по ссылке:", ve)
-            except requests.RequestException as re:
-                print("Ошибка сетевого запроса при получении статистики:", re)
-        else:
-            try:
-                short = shorten_link(token, url)
-                print("Сокращенная ссылка:", short)
-            except ValueError as ve:
-                print("Ошибка при сокращении ссылки:", ve)
-            except requests.RequestException as re:
-                print("Ошибка сетевого запроса при сокращении ссылки:", re)
-    except Exception as e:
-        print("Не удалось сократить ссылку или получить статистику:", e)
+        shorten = is_shorten_link(url)
+    except requests.RequestException as re:
+        print("Ошибка сетевого запроса при проверке ссылки:", re)
+        return
+
+    if shorten:
+        try:
+            clicks = count_clicks(token, url)
+            print("Количество переходов по ссылке:", clicks)
+        except ValueError as ve:
+            print("Ошибка при получении статистики по ссылке:", ve)
+        except requests.RequestException as re:
+            print("Ошибка сетевого запроса при получении статистики:", re)
+    else:
+        try:
+            short = shorten_link(token, url)
+            print("Сокращенная ссылка:", short)
+        except ValueError as ve:
+            print("Ошибка при сокращении ссылки:", ve)
+        except requests.RequestException as re:
+            print("Ошибка сетевого запроса при сокращении ссылки:", re)
 
 
 if __name__ == "__main__":
