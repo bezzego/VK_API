@@ -1,6 +1,7 @@
 import requests
 from urllib.parse import urlparse
 import os
+import argparse
 from dotenv import load_dotenv
 
 
@@ -53,7 +54,12 @@ def main():
     if not token:
         raise EnvironmentError("Переменная окружения VK_TOKEN не установлена")
 
-    url = input("Введите ссылку для сокращения: ")
+    parser = argparse.ArgumentParser(
+        description="Сокращение ссылки или подсчёт кликов с помощью VK API"
+    )
+    parser.add_argument("url", help="URL-адрес для сокращения или анализа")
+    args = parser.parse_args()
+    url = args.url
 
     try:
         shorten = is_shorten_link(url)
