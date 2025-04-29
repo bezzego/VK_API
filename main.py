@@ -5,13 +5,8 @@ from dotenv import load_dotenv
 
 
 def is_shorten_link(url):
-    params = {"url": url, "key": os.getenv("VK_TOKEN"), "v": "5.131"}
-    response = requests.get(
-        "https://api.vk.com/method/utils.getLinkStats", params=params
-    )
-    response.raise_for_status()
-    link_stats_response = response.json()
-    return "response" in link_stats_response
+    parsed = urlparse(url)
+    return parsed.netloc == "vk.cc"
 
 
 def shorten_link(token, url):
